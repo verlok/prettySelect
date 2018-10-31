@@ -13,6 +13,7 @@ class PrettySelect {
 
 		this.wrapperElement = createElement("div", this.settings.wrapClass);
 
+		this._initialDisplay = this.selectElement.style.display;
 		this.selectElement.style.display = "none";
 		this.selectElement.parentNode.append(this.wrapperElement);
 
@@ -35,22 +36,19 @@ class PrettySelect {
 		this.wrapperElement.append(this.labelElement);
 		this.wrapperElement.append(this.dropDownElement);
 		this.wrapperElement.addEventListener("click", event => {
-			if (event.target.tagName !== "LI") {
-				return;
-			}
-			let liElement = event.target;
-			if (this.isDisabled()) {
+			if (event.target.tagName !== "LI" || this.isDisabled()) {
 				return;
 			}
 			event.stopPropagation();
+			let liElement = event.target;
 			let newVal = liElement.getAttribute("data-value");
 			let oldVal = this.selectElement.value;
+			this.closeDrop();
 			if (newVal === oldVal) {
 				return;
 			}
 			this.selectElement.value = newVal;
 			this._changeHandler();
-			this.closeDrop();
 		});
 
 		this.closeDrop();
@@ -67,15 +65,11 @@ class PrettySelect {
 				return;
 			}
 			this.showDrop();
-			let htmlElement = document.querySelector("html"); // TODO: Bring out and reuse
-			htmlElement.addEventListener(
-				"click",
-				() => {
-					console.log("Clicked on HTML element");
-					this.closeDrop();
-				},
-				{ once: true }
-			); //TODO: Fix IE11 without "once"
+		});
+
+		let htmlElement = document.querySelector("html");
+		htmlElement.addEventListener("click", () => {
+			this.closeDrop();
 		});
 
 		this.observer = new MutationObserver((mutations, observer) => {
@@ -115,7 +109,7 @@ class PrettySelect {
 	}
 
 	_changeHandler() {
-		let newValue = this.selectElement.value.replace("'", "\\'"); //string
+		let newValue = this.selectElement.value.replace("'", "\\'");
 		this.labelElement.innerHTML = this.selectElement.querySelector(
 			`option[value="${newValue}"]`
 		).innerHTML;
@@ -129,8 +123,7 @@ class PrettySelect {
 		this.wrapperElement.removeChild(this.dropDownElement);
 		this.wrapperElement.parentNode.append(this.selectElement);
 		this.wrapperElement.parentNode.removeChild(this.wrapperElement);
-		this.selectElement.style.display = "inline-block"; // TODO: Save initial display value in constructor, to replace the original one
-		//TODO: this.selectElement .removeData 'PrettySelect'
+		this.selectElement.style.display = this._initialDisplay;
 	}
 
 	isDisabled() {
