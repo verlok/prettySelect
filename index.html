@@ -1,0 +1,55 @@
+<html>
+
+<head>
+    <title>PrettySelect tests</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        .prettyselect-wrap {
+            position: relative;
+            width: 100px;
+            box-sizing: border-box;
+        }
+        .prettyselect-label {
+            cursor: pointer;
+            box-sizing: inherit;
+            display: block;
+            border: 1px solid gray;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            padding: 3px 5px;
+        }
+        .prettyselect-drop {
+            cursor: pointer;
+            box-sizing: inherit;
+            padding: 0;
+            margin: 0;
+            list-style-type: none;
+            border: 1px solid gray;
+            position: absolute;
+            top: 25px;
+            width: 100%;
+        }
+        .prettyselect-drop > li {
+            padding: 3px 5px;
+        }
+        .prettyselect-drop > li:hover {
+            background-color: lightgray;
+        }
+    </style>
+</head>
+
+<body>
+    <select name="" id="">
+        <option value="1 e">a</option>
+        <option value="2" data-placeholder>b</option>
+        <option value="3">c</option>
+        <option value="4">d</option>
+        <option value="5'r" class="qweqwe">e'r</option>
+    </select>
+
+    <script type="module" src="./dist/prettyselect.es2015.js"></script>
+    <script type="module" src="./initialize.js"></script>
+</body>
+
+</html>

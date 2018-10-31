@@ -1,0 +1,33 @@
+{
+	"name": "prettyselect",
+	"version": "1.0.0",
+	"description": "A beautifier which makes select elements pretty without jQuery",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/verlok/prettySelect.git"
+	},
+	"author": "Andrea \"verlok\" Verlicchi",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/verlok/prettySelect/issues"
+	},
+	"homepage": "https://github.com/verlok/prettySelect#readme",
+	"devDependencies": {
+		"@babel/core": "^7.1.2",
+		"@babel/preset-env": "^7.1.0",
+		"babel-core": "^6.26.0",
+		"babel-plugin-transform-object-assign": "^6.22.0",
+		"babel-preset-es2015": "^6.24.1",
+		"gulp": "^3.9.1",
+		"gulp-babel": "^8.0.0",
+		"gulp-eslint": "^5.0.0",
+		"gulp-rename": "^1.4.0",
+		"gulp-rollup": "^2.16.2",
+		"gulp-sourcemaps": "^2.6.4",
+		"gulp-uglify": "^3.0.1"
+	}
+}
