@@ -1,20 +1,15 @@
 import defaults from "./prettySelect.defaults";
-import { createElement } from "./prettySelect.dom";
+import { createElement, getDropHtml, getLabelHtml } from "./prettySelect.dom";
 
 class PrettySelect {
+	// TODO: Organize into intention-declaring named methods
 	constructor(selectElement, options) {
 		this.settings = Object.assign({}, defaults, options);
 		this.selectElement = selectElement;
 
-		//TODO: Move out
-		let optionsSelector = {
-			onlyWithValue: "option[value][value!='']:not([data-placeholder])",
-			withoutValue: "option:not([data-placeholder])"
-		};
-
 		this.settings.optionsSelector = this.settings.onlyValuedOptions
-			? optionsSelector.onlyWithValue
-			: optionsSelector.withoutValue;
+			? "option[value][value!='']:not([data-placeholder])"
+			: "option:not([data-placeholder])";
 
 		this.wrapperElement = createElement("div", this.settings.wrapClass);
 
@@ -24,15 +19,14 @@ class PrettySelect {
 		this.wrapperElement.append(this.selectElement);
 
 		this.labelElement = createElement("div", this.settings.labelClass);
-		this.labelElement.append(this._getLabel(this.selectElement));
+		this._setLabelHtml();
 
 		let optionElements = this.selectElement.querySelectorAll(
 			this.settings.optionsSelector
 		);
-		let elementsHtml = this._populate(optionElements); //TODO: `_populate` returns a string, what if it appended to the dropdown instead?
 
 		this.dropDownElement = createElement("ul", this.settings.dropClass);
-		this.dropDownElement.innerHTML = elementsHtml;
+		this._setDropHtml();
 
 		this.wrapperElement.setAttribute(
 			"data-prettyselect-elements",
@@ -94,15 +88,8 @@ class PrettySelect {
 				optionElements.length
 			);
 
-			this.dropDownElement.innerHTML = this._populate(optionElements);
-
-			if (thiss.selectElement.querySelector("[selected]").length === 0) {
-				this.labelElement.innerHTML(this._getLabel(this.selectElement));
-			} else {
-				this.labelElement.innerHTML = this.selectElement.querySelector(
-					"option[selected]"
-				).innerHTML;
-			}
+			this._setDropHtml();
+			this._setLabelHtml();
 		});
 
 		this.observer.observe(this.selectElement, {
@@ -116,40 +103,22 @@ class PrettySelect {
 
 	// PRIVATE
 
+	_setLabelHtml() {
+		this.labelElement.innerHTML = getLabelHtml(this.selectElement);
+	}
+
+	_setDropHtml() {
+		let optionElements = this.selectElement.querySelectorAll(
+			this.settings.optionsSelector
+		);
+		this.dropDownElement.innerHTML = getDropHtml(optionElements);
+	}
+
 	_changeHandler() {
 		let newValue = this.selectElement.value.replace("'", "\\'"); //string
 		this.labelElement.innerHTML = this.selectElement.querySelector(
 			`option[value="${newValue}"]`
 		).innerHTML;
-	}
-
-	// ALL THESE CAN ALL BE CONVERTED TO STATIC FUNCTIONS
-
-	_populate(optionElements) {
-		return Array.from(optionElements).
-			map(optionElement => {
-				let rawValue = optionElement.getAttribute("value");
-				let rawClass = optionElement.getAttribute("class");
-				let classString =
-					typeof rawClass !== "undefined"
-						? `class="${rawClass}"`
-						: "";
-				return `<li data-value="${rawValue}" ${classString}>${
-					optionElement.innerHTML
-				}</li>`;
-			}).
-			join("");
-	}
-
-	_getLabel(selectElement) {
-		let placeholder = selectElement.querySelector(
-			"option[data-placeholder]"
-		);
-		if (placeholder) {
-			return placeholder.innerHTML;
-		}
-		let selectedOption = selectElement.querySelector("option[selected]");
-		return selectedOption ? selectedOption.innerHTML : "";
 	}
 
 	// PUBLIC

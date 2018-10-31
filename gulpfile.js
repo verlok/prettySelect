@@ -122,4 +122,7 @@ gulp.task("watch", function() {
 	]);
 });
 
-gulp.task("default", ["lint", "dist-umd", "dist-es", "dist-amd", "dist-iife"]);
+gulp.task("default", [
+	"lint",
+	/*"dist-umd",*/ "dist-es" /* "dist-amd", "dist-iife"*/
+]);
