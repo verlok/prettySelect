@@ -22,19 +22,20 @@ class PrettySelect {
 		this.labelElement = createElement("div", this.settings.labelClass);
 		this._setLabelHtml();
 
-		let optionElements = this.selectElement.querySelectorAll(
-			this.settings.optionsSelector
-		);
-
 		this.dropDownElement = createElement("ul", this.settings.dropClass);
 		this._setDropHtml();
 
+		let optionElements = this.selectElement.querySelectorAll(
+			this.settings.optionsSelector
+		);
 		this.wrapperElement.setAttribute(
 			"data-prettyselect-elements",
 			optionElements.length
 		);
+
 		this.wrapperElement.append(this.labelElement);
 		this.wrapperElement.append(this.dropDownElement);
+
 		this.wrapperElement.addEventListener("click", event => {
 			if (event.target.tagName !== "LI" || this.isDisabled()) {
 				return;
